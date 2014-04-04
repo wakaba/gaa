@@ -1,0 +1,32 @@
+gaa
+~~~
+
+* Instructions for Git repositories
+
+The |nightly| branch of the repository is used.
+
+Prepare |Makefile| in the root directory of the repository such that
+|make updatenightly| does everything necessary, including but not
+limited to:
+
+  - |git submodule update --init|
+  - Preparation of environment (e.g. installing modules)
+  - Updating/building process
+  - |git add|ing changed files
+
+It does not (and should not) invoke |git commit| or |git push|.
+
+A new copy of working tree for the repository is created for each
+time.  The |make updatenightly| command should not modify the
+environment outside of the repository.
+
+* Author
+
+Wakaba <wakaba@suikawiki.org>.
+
+* License
+
+Copyright 2014 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
