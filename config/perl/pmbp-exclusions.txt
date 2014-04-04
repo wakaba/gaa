@@ -1,0 +1,2 @@
+- "../../modules/web-ua" tests oauth wsse cli lwp testws curl anyeventsocks
+- "../../modules/json-functions" tests

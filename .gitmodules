@@ -1,0 +1,6 @@
+[submodule "modules/json-functions"]
+	path = modules/json-functions
+	url = git://github.com/wakaba/perl-json-functions-xs
+[submodule "modules/web-ua"]
+	path = modules/web-ua
+	url = git://github.com/wakaba/perl-web-useragent-functions
