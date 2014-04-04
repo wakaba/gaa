@@ -5,9 +5,14 @@ logdir=${GAA_LOG_DIR:-logs}
 hostname=${GAA_HOST_NAME:-gaahost}
 ghuser=${GAA_GH_USER:-@@@}
 ghrepo=${GAA_GH_REPO:-@@@}
+irc_channel=${GAA_IRC_CHANNEL:-#gaa-test}
+failure_log_url=${GAA_FAILURE_LOG_URL:-http://test/}
+irc_post_url=${GAA_IRC_POST_URL:=http://test/}
 
 mkdir -p $logdir/$ghuser
 exec > $logdir/$ghuser/$ghrepo.txt 2>&1
+
+date
 
 gaadir=`dirname $0`/..
 gaadir=`cd $gaadir && pwd`
@@ -36,5 +41,9 @@ cd $repodir && \
 
 status=$?
 if [ $status -ne 0 ]; then
-  echo "XXX failed"
+  curl --request POST -F channel="$irc_channel" \
+      -F message="gaa failed: $failure_log_url$ghuser/$ghrepo.txt" \
+      "$irc_post_url"
 fi
+
+date
