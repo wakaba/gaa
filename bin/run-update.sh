@@ -28,11 +28,11 @@ chmod 0600 $key
 
 git clone $giturl $repodir
 cd $repodir && \
-    (git checkout -b nightly origin/nightly || git checkout -b nightly) && \
+    git checkout -b nightly && \
     timeout -s KILL 600 make deps && \
     timeout -s KILL 7200 make updatenightly && \
     git commit -m auto && \
-    git push origin nightly
+    git push origin +nightly
 
 status=$?
 if [ $status -ne 0 ]; then

@@ -3,7 +3,7 @@ gaa
 
 * Instructions for Git repositories
 
-The |nightly| branch of the repository is used.
+The |nightly| branch of the repository is used (force updated!).
 
 Prepare |Makefile| in the root directory of the repository such that
 |make updatenightly| does everything necessary, including but not
