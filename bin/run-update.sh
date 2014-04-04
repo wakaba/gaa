@@ -35,15 +35,15 @@ git clone $giturl $repodir
 cd $repodir && \
     git checkout -b nightly && \
     timeout -s KILL 3600 make deps && \
-    timeout -s KILL 10000 make updatenightly && \
-    git commit -m auto && \
-    git push origin +nightly
+    timeout -s KILL 10000 make updatenightly
 
 status=$?
 if [ $status -ne 0 ]; then
   curl --request POST -F channel="$irc_channel" \
       -F message="gaa failed: $failure_log_url$ghuser/$ghrepo.txt" \
       "$irc_post_url"
+else
+  cd $repodir && git commit -m auto && git push origin +nightly
 fi
 
 date
