@@ -34,8 +34,8 @@ chmod 0600 $key
 git clone $giturl $repodir
 cd $repodir && \
     git checkout -b nightly && \
-    timeout -s KILL 600 make deps && \
-    timeout -s KILL 7200 make updatenightly && \
+    timeout -s KILL 3600 make deps && \
+    timeout -s KILL 10000 make updatenightly && \
     git commit -m auto && \
     git push origin +nightly
 
