@@ -43,7 +43,8 @@ if [ $status -ne 0 ]; then
       -F message="gaa failed: $failure_log_url$ghuser/$ghrepo.txt" \
       "$irc_post_url"
 else
-  cd $repodir && git commit -m auto && git push origin +nightly
+  cd $repodir && git commit -m auto
+  cd $repodir && git push origin +nightly
 fi
 
 date
