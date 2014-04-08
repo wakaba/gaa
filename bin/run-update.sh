@@ -14,9 +14,6 @@ exec > $logdir/$ghuser/$ghrepo.txt 2>&1
 
 date
 
-echo "<a href="\"$ghuser/$ghrepo\">$ghuser/$ghrepo</a> " > $logdir/index.html
-date >> $logdir/index.html
-
 gaadir=`dirname $0`/..
 gaadir=`cd $gaadir && pwd`
 giturl=git@github.com:$ghuser/$ghrepo
