@@ -2,6 +2,7 @@ use strict;
 use warnings;
 use Path::Tiny;
 local $ENV{LANG} = 'C';
+local $ENV{TZ} = 'UTC';
 
 my $run = path (__FILE__)->parent->child ('run-update.sh')->stringify;
 
