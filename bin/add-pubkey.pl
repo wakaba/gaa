@@ -10,8 +10,8 @@ my ($keys_dir, $host, $user, $repo) = @ARGV;
 die "Usage: $0 host user repo\n"
     unless defined $repo and
         $host =~ /\A[A-Za-z0-9_.-]+\z/ and
-        $user =~ /\A[A-Za-z0-9_-]+\z/ and
-        $repo =~ /\A[A-Za-z0-9_-]+\z/;
+        $user =~ /\A[A-Za-z0-9_.-]+\z/ and
+        $repo =~ /\A[A-Za-z0-9_.-]+\z/;
 my $keys_path = path $keys_dir;
 
 my $key = GAA::Key->new_from_host_and_path_and_name
