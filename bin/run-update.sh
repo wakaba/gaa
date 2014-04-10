@@ -33,6 +33,7 @@ chmod 0600 $key
 
 git clone $giturl $repodir --depth 1
 cd $repodir && \
+    git rev-parse HEAD && \
     git checkout -b nightly && \
     timeout -s KILL 3600 make deps && \
     timeout -s KILL 10000 make updatenightly
