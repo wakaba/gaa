@@ -31,7 +31,7 @@ key=$keysdir/$ghuser/$ghrepo
 export GAA_SSH_PUB_KEY=$key
 chmod 0600 $key
 
-git clone $giturl $repodir
+git clone $giturl $repodir --depth 1
 cd $repodir && \
     git checkout -b nightly && \
     timeout -s KILL 3600 make deps && \
@@ -45,6 +45,7 @@ if [ $status -ne 0 ]; then
 else
   cd $repodir && git commit -m auto
   cd $repodir && git push origin +nightly
+  rm -fr $repodir
 fi
 
 date
