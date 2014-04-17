@@ -46,7 +46,7 @@ if [ $status -ne 0 ]; then
 else
   cd $repodir && git commit -m auto
   cd $repodir && git push origin +nightly
-  rm -fr $repodir
 fi
+rm -fr $repodir
 
 date
