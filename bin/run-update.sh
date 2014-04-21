@@ -31,6 +31,8 @@ key=$keysdir/$ghuser/$ghrepo
 export GAA_SSH_PUB_KEY=$key
 chmod 0600 $key
 
+export PMBP_VERBOSE=10
+
 git clone $giturl $repodir --depth 1
 cd $repodir && \
     git rev-parse HEAD && \
