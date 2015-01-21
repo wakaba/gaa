@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use AnyEvent;
 use Web::UserAgent::Functions qw(http_get http_post_data);
-use JSON::Functions::XS qw(perl2json_bytes json_bytes2perl);
+use JSON::PS;
 
 sub new_from_access_token ($$) {
   return bless {access_token => $_[1]}, $_[0];

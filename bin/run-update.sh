@@ -22,6 +22,7 @@ giturl=git@github.com:$ghuser/$ghrepo
 repodir=$reposdir/github/$ghuser/$ghrepo
 rm -fr $repodir
 
+mkdir -p $keysdir
 export HOME=$keysdir
 git config --file $keysdir/.gitconfig user.name gaa
 git config --file $keysdir/.gitconfig user.email gaa@$hostname
@@ -34,7 +35,7 @@ chmod 0600 $key
 
 export PMBP_VERBOSE=10
 
-git clone $giturl $repodir --depth 1
+timeout -s KILL 600 git clone $giturl $repodir --depth 1
 cd $repodir && \
     git rev-parse HEAD && \
     git checkout -b $nightly_branch && \
@@ -42,14 +43,18 @@ cd $repodir && \
     timeout -s KILL 10000 make update$nightly_branch
 
 status=$?
+if [ $status -eq 0 ]; then
+  cd $repodir && git commit -m auto
+  cd $repodir && timeout -s KILL 600 git push origin +$nightly_branch
+  status=$?
+fi
+
 if [ $status -ne 0 ]; then
   curl --request POST -F channel="$irc_channel" \
-      -F message="gaa failed: $failure_log_url$ghuser/$ghrepo.txt" \
+      -F message="gaa($nightly_branch) failed: $failure_log_url$ghuser/$ghrepo.txt" \
       "$irc_post_url"
-else
-  cd $repodir && git commit -m auto
-  cd $repodir && git push origin +$nightly_branch
 fi
+
 rm -fr $repodir
 
 date
