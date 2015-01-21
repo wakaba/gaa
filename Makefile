@@ -21,6 +21,8 @@ pmbp-install: local/bin/pmbp.pl
 	    --create-perl-command-shortcut perl \
 	    --create-perl-command-shortcut prove
 
+PROVE = ./prove
+
 test: test-deps test-main
 test-deps: deps
 test-main:
