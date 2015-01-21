@@ -22,6 +22,10 @@ sub config ($;$) {
   return $_[0]->{config} || {};
 } # config
 
+sub logs_path ($) {
+  return $_[0]->{logs_path} ||= path ($_[0]->config->{logs_dir_name} // 'logs')->absolute;
+} # logs_path
+
 sub enqueue ($$) {
   my ($self, $item) = @_;
   $item->{priority} = 0+($item->{priority} || 0);
@@ -67,7 +71,8 @@ sub _run_task ($) {
     local $ENV{TZ} = 'UTC';
     local $ENV{GAA_GH_USER} = $item->{gh_user};
     local $ENV{GAA_GH_REPO} = $item->{gh_repo};
-    $cv = (run_cmd [$RunPath], '<' => \'');
+    local $ENV{GAA_LOG_DIR} = $self->logs_path;
+    $cv = (run_cmd [$RunPath], '<' => \'', '$$' => \($item->{'$$'}));
   }
 
   $cv->cb (sub {
@@ -119,9 +124,57 @@ sub _http ($) {
       }
     }
 
+    if ($path eq '/kill') {
+      return $req->respond ([405, 'Method not allowed', {Allow => 'POST'}, '405 Method not allowed'])
+          unless $req->method eq 'POST';
+      my $item = $self->{running};
+      return $req->respond ([200, 'No running task', {}, '200 No running task'])
+          unless defined $item;
+      my $gh_user = $req->parm ('gh_user') // '';
+      my $gh_repo = $req->parm ('gh_repo') // '';
+      return $req->respond ([200, 'Task no longer running', {}, '200 Task no longer running'])
+          unless $gh_user eq $item->{gh_user} and $gh_repo eq $item->{gh_repo};
+      my $signal = $req->parm ('force') ? 'KILL' : 'INT';
+      $self->log (sprintf 'Send SIG%s to %s/%s', $signal, $gh_user, $gh_repo);
+      kill $signal, $item->{'$$'};
+      return $req->respond ([200, 'SIG'.$signal.' sent', {}, '200 SIG'.$signal.' sent']);
+    }
+
+    if ($path =~ m{\A/logs/([0-9A-Za-z_-]+)/([0-9A-Za-z_-]+)\.txt\z}) {
+      my $log_path = $self->logs_path->child ("$1/$2.txt");
+      if ($log_path->is_file) {
+        return $self->_send_file
+            ($log_path, {'Content-Type' => 'text/plain; charset=utf-8'}, $req);
+      }
+    }
+
+    if ($path eq '/robots.txt') {
+      return $req->respond ([200, 'OK', {'Content-Type' => 'text/plain'}, "User-Agent: *\nDisallow: /\n"]);
+    }
+
     return $req->respond ([404, 'Not found', {}, '404 not found']);
   });
 } # _http
+
+sub _send_file ($$$$) {
+  my ($self, $path, $headers, $req) = @_;
+  my $data = '';
+  my $hdl; $hdl = AnyEvent::Handle->new
+    (fh => $path->openr,
+     on_error => sub {
+       $self->log ("$path: $_[2]");
+       $hdl->destroy;
+       $req->respond ([500, 'File error', {}, '500 File error']);
+     },
+     on_read => sub {
+       $data .= $_[0]->{rbuf};
+       $_[0]->rbuf = '';
+     },
+     on_eof => sub {
+       $req->respond ([200, 'OK', $headers, $data]);
+       $hdl->destroy;
+     });
+} # _send_file
 
 sub run_as_cv ($) {
   my $self = shift;
@@ -147,6 +200,9 @@ sub shutdown ($) {
   my $self = $_[0];
   $self->{shutdown} = 1;
   $self->{queue} = [];
+  if (defined $self->{running}) {
+    kill 'TERM', $self->{running}->{'$$'};
+  }
   delete $self->{httpd};
   delete $self->{sigterm};
   delete $self->{sigint};

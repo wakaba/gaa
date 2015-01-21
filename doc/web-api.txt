@@ -1,0 +1,42 @@
+Web API of GAA scheduling server
+
+  GET /queue
+
+    Return the current task queue in JSON.  The JSON file contains an
+    array of task objects.
+
+  POST /queue
+  Content-Type: application/x-www-form-urlencoded
+
+    Queue a task.  Following parameters are available:
+
+      gh_user   The user name part of the GitHub repository.  Required.
+      gh_repo   The repository name part of the GitHub repository.  Required.
+      priority  The priority.  Optional.
+
+  GET /logs/{gh_user}/{gh_repo}.txt
+
+    Return the log file of the last execution for the repository, if
+    any.  The second and third path segments indicate the user and
+    repository names of the GitHub repository.
+
+  POST /kill
+  Content-Type: application/x-www-form-urlencoded
+
+    Kill the current task, if it is processing the specified
+    repository.  Following parameters are available:
+
+      gh_user   The user name part of the GitHub repository.  Required.
+      gh_repo   The repository name part of the GitHub repository.  Required.
+      force     If |1|, a SIGKILL signal is sent,  Otherwise, a SIGTERM is sent.
+
+A task object is a JSON object whose name/value pairs contain:
+
+  gh_user   The user name part of the GitHub repository.
+  gh_repo   The repository name part of the GitHub repository.
+  status    |running| if the task is currently running, or |waiting| otherwise.
+  priority  The priority.
+  timestamp When the task is enqueued, in Unix time_t.
+
+The priority of a task is an integer, defaulted to zero.  Larger value
+indicates higher priority.
