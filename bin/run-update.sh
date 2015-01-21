@@ -7,7 +7,8 @@ ghuser=${GAA_GH_USER:-@@@}
 ghrepo=${GAA_GH_REPO:-@@@}
 irc_channel=${GAA_IRC_CHANNEL:-#gaa-test}
 failure_log_url=${GAA_FAILURE_LOG_URL:-http://test/}
-irc_post_url=${GAA_IRC_POST_URL:=http://test/}
+irc_post_url=${GAA_IRC_POST_URL:-http://test/}
+nightly_branch=${GAA_NIGHTLY_BRANCH:-nightly}
 
 mkdir -p $logdir/$ghuser
 exec > $logdir/$ghuser/$ghrepo.txt 2>&1
@@ -36,9 +37,9 @@ export PMBP_VERBOSE=10
 git clone $giturl $repodir --depth 1
 cd $repodir && \
     git rev-parse HEAD && \
-    git checkout -b nightly && \
+    git checkout -b $nightly_branch && \
     timeout -s KILL 3600 make deps && \
-    timeout -s KILL 10000 make updatenightly
+    timeout -s KILL 10000 make update$nightly_branch
 
 status=$?
 if [ $status -ne 0 ]; then
@@ -47,7 +48,7 @@ if [ $status -ne 0 ]; then
       "$irc_post_url"
 else
   cd $repodir && git commit -m auto
-  cd $repodir && git push origin +nightly
+  cd $repodir && git push origin +$nightly_branch
 fi
 rm -fr $repodir
 
