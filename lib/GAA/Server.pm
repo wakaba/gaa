@@ -27,10 +27,12 @@ sub logs_path ($) {
 } # logs_path
 
 sub enqueue ($$) {
-  my ($self, $item) = @_;
-  $item->{priority} = 0+($item->{priority} || 0);
-  $item->{timestamp} = time;
-  $item->{key} = $item->{gh_user} . '-' . $item->{gh_repo};
+  my ($self, $items) = @_;
+  for my $item (@$items) {
+    $item->{priority} = 0+($item->{priority} || 0);
+    $item->{timestamp} = time;
+    $item->{key} = $item->{gh_user} . '-' . $item->{gh_repo};
+  }
   my $item_to_priority = {};
   my $found = {};
 
@@ -47,7 +49,7 @@ sub enqueue ($$) {
     $item_to_priority->{$_->{key}} = $_->{priority}
         if $item_to_priority->{$_->{key}} < $_->{priority};
     $_;
-  } @{$self->{queue}}, $item];
+  } @{$self->{queue}}, @$items];
 
   $self->_schedule_to_run_task;
 } # enqueue
@@ -107,8 +109,8 @@ sub _http ($) {
         my $gh_repo = $req->parm ('gh_repo')
             // return $req->respond ([400, 'Bad |gh_repo|', {}, '400 Bad |gh_repo|']);
         my $priority = $req->parm ('priority');
-        $self->enqueue ({gh_user => $gh_user, gh_repo => $gh_repo,
-                         priority => $priority});
+        $self->enqueue ([{gh_user => $gh_user, gh_repo => $gh_repo,
+                          priority => $priority}]);
         return $req->respond ([200, 'Accepted', {}, '200 Accepted']);
       } else {
         my $json = perl2json_bytes [map {
