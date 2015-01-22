@@ -27,6 +27,7 @@ sub add_deploy_key_as_cv ($%) {
       },
       anyevent => 1,
       cb => sub {
+        warn $_[1]->content unless $_[1]->is_success;
         $cv->send;
       };
   return $cv;
