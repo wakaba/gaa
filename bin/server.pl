@@ -1,6 +1,5 @@
 use strict;
 use warnings;
-use Path::Tiny;
 use GAA::Server;
 
 my $server = GAA::Server->new;
