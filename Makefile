@@ -20,8 +20,8 @@ pmbp-update: local/bin/pmbp.pl
 	perl local/bin/pmbp.pl $(PMBP_OPTIONS) --update
 pmbp-install: local/bin/pmbp.pl
 	perl local/bin/pmbp.pl $(PMBP_OPTIONS) --install \
-	    --create-perl-command-shortcut perl \
-	    --create-perl-command-shortcut prove
+	    --create-perl-command-shortcut @perl \
+	    --create-perl-command-shortcut @prove
 
 PROVE = ./prove
 
