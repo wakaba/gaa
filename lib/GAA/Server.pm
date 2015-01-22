@@ -26,6 +26,13 @@ sub logs_path ($) {
   return $_[0]->{logs_path} ||= path ($_[0]->config->{logs_dir_name} // 'logs')->absolute;
 } # logs_path
 
+sub oncheckrequest ($;$) {
+  if (@_ > 1) {
+    $_[0]->{oncheckrequest} = $_[1];
+  }
+  return $_[0]->{oncheckrequest} ||= sub { 1 };
+} # oncheckrequest
+
 sub enqueue ($$) {
   my ($self, $items) = @_;
   for my $item (@$items) {
@@ -98,6 +105,9 @@ sub _http ($) {
   $self->{httpd}->reg_cb ('' => sub {
     my ($httpd, $req) = @_;
     $self->log (sprintf '%s %s %s', $req->client_host, $req->method, $req->url);
+
+    return unless $self->oncheckrequest->($self, $req);
+
     my $path = $req->url->path;
 
     if ($path eq '/queue') {
