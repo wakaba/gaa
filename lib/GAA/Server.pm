@@ -136,6 +136,10 @@ sub _http ($) {
       }
     }
 
+    if ($path eq '/info') {
+      return $req->respond ([200, 'OK', {}, `git rev-parse HEAD`]);
+    }
+
     if ($path eq '/kill') {
       return $req->respond ([405, 'Method not allowed', {Allow => 'POST'}, '405 Method not allowed'])
           unless $req->method eq 'POST';
