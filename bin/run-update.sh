@@ -57,4 +57,6 @@ fi
 
 rm -fr $repodir
 
+$gaadir/perl $gaadir/bin/delete-pubkey.pl $keysdir $hostname $ghuser $ghrepo
+
 date

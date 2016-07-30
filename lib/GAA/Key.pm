@@ -14,6 +14,10 @@ sub pub_path ($) {
   return $_[0]->{pub_path} ||= $_[0]->{path}->child ($_[0]->{name} . '.pub');
 } # pub_path
 
+sub rid_path ($) {
+  return $_[0]->{rid_path} ||= $_[0]->{path}->child ($_[0]->{name} . '.rid');
+} # rid_path
+
 sub comment ($) {
   return $_[0]->{comment} ||= sprintf '%s@GAA.%s:%s',
       $_[0]->{name}, $_[0]->{host}, time;

@@ -22,3 +22,5 @@ MIME::Base64~3.15
 HTTP::Response~6.04
 Path::Class~0.35
 common::sense~3.73
+AnyEvent
+Path::Tiny
