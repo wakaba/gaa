@@ -23,3 +23,5 @@ if ($key->rid_path->is_file) {
   $gh->delete_deploy_key_as_cv (user => $user, repo => $repo, key => $key)
       ->recv;
 }
+$key->secret_path->remove;
+$key->pub_path->remove;
