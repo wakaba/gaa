@@ -6,19 +6,26 @@ gaa
 The |nightly| branch of the repository is used (force updated!).
 
 Prepare |Makefile| in the root directory of the repository such that
-|make updatenightly| does everything necessary, including but not
-limited to:
+|make deps| setups the environment (e.g. running |git submodule update
+--init| and installing libralies and modules) and |make updatenightly|
+does anything else necessary, including but not limited to:
 
-  - |git submodule update --init|
-  - Preparation of environment (e.g. installing modules)
-  - Updating/building process
+  - Updating libraries or modules and data files
+  - Building pre-compiled files
   - |git add|ing changed files
 
 It does not (and should not) invoke |git commit| or |git push|.
 
-A new copy of working tree for the repository is created for each
-time.  The |make updatenightly| command should not modify the
-environment outside of the repository.
+The GAA clones the repositroy, then runs |make deps| and |make
+updatenightly| in order.  A new copy of working tree for the
+repository is created for each time.  The |make deps| and |make
+updatenightly| commands should not modify the environment outside of
+the repository's directory.
+
+The |GAA| environment variable is set to a true value before |make
+deps| and |make udpatenightly| commands are invoked.  Build/update
+processes can consult with this variable to determine whether it is
+invoked by GAA or not.
 
 * Author
 
@@ -26,7 +33,7 @@ Wakaba <wakaba@suikawiki.org>.
 
 * License
 
-Copyright 2014-2015 Wakaba <wakaba@suikawiki.org>.
+Copyright 2014-2017 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
