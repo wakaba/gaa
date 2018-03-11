@@ -156,7 +156,7 @@ sub _http ($) {
       return $req->respond ([200, 'SIG'.$signal.' sent', {}, '200 SIG'.$signal.' sent']);
     }
 
-    if ($path =~ m{\A/logs/([0-9A-Za-z_-]+)/([0-9A-Za-z_-]+)\.txt\z}) {
+    if ($path =~ m{\A/logs/([0-9A-Za-z_-]+)/([0-9A-Za-z_-][0-9A-Za-z_.-]+)\.txt\z}) {
       my $log_path = $self->logs_path->child ("$1/$2.txt");
       if ($log_path->is_file) {
         return $self->_send_file
