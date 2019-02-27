@@ -2,7 +2,6 @@ Algorithm::Diff~1.1903
 AnyEvent~7.15
 AnyEvent::HTTP~2.24
 AnyEvent::HTTPD~0.93
-AnyEvent::Util
 Canary::Stability~2012
 Capture::Tiny~0.48
 Carp~1.50
@@ -10,7 +9,7 @@ Encode~3.00
 Encode::Locale~1.05
 Exporter::Lite~0.08
 HTTP::Date~6.02
-HTTP::Request~6.18
+HTTP::Response~6.18
 IO::HTML~1.001
 LWP::MediaTypes~6.02
 MIME::Base64~3.15
@@ -18,7 +17,7 @@ Net::SSLeay~1.85
 Object::Event~1.23
 Path::Class~0.37
 Path::Tiny~0.108
-Test::Differences~0.65
+Test::Differences~0.66
 Test::More~1.302162
 Text::Diff~1.45
 Types::Serialiser~1.0
