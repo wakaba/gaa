@@ -32,7 +32,7 @@ sub create_key_if_not_found ($) {
   unless ($self->has_key) {
     $self->secret_path->parent->mkpath;
     system 'ssh-keygen',
-              '-t' => 'dsa',
+              '-t' => 'rsa',
               '-N' => '',
               '-C' => $self->comment,
               '-f' => $self->secret_path;
