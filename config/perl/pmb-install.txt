@@ -18,7 +18,7 @@ Object::Event~1.23
 Path::Class~0.37
 Path::Tiny~0.112
 Test::Differences~0.67
-Test::More~1.302171
+Test::More~1.302172
 Text::Diff~1.45
 Time::Local~1.30
 Time::Zone~2.24
