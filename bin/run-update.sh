@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+set -eo pipefail
+
 reposdir=${GAA_REPOS_DIR:-repos}
 keysdir=${GAA_KEYS_DIR:-keys}
 logdir=${GAA_LOG_DIR:-logs}
